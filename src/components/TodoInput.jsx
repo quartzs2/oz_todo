@@ -1,24 +1,32 @@
 import { useRef } from "react";
-import { API_URLS } from "../constants/urls";
 
-export const TodoInput = ({ setTodo }) => {
+const ENTER_KEY = "Enter";
+
+export const TodoInput = ({ onAddTodo }) => {
   const inputRef = useRef(null);
 
-  const addTodo = () => {
-    const newTodo = {
-      content: inputRef.current.value,
-    };
-    fetch(API_URLS.TODO, {
-      method: "POST",
-      body: JSON.stringify(newTodo),
-    });
-    setTodo((prev) => [...prev, newTodo]);
+  const handleAddClick = async () => {
+    const content = inputRef.current.value.trim();
+
+    if (content === "") {
+      alert("Todo 내용을 입력해주세요.");
+      return;
+    }
+
+    await onAddTodo(content);
+    inputRef.current.value = "";
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === ENTER_KEY) {
+      handleAddClick();
+    }
   };
 
   return (
     <>
-      <input ref={inputRef} />
-      <button onClick={addTodo}>추가</button>
+      <input ref={inputRef} onKeyDown={handleKeyDown} placeholder="할 일을 입력하세요" />
+      <button onClick={handleAddClick}>추가</button>
     </>
   );
 };
