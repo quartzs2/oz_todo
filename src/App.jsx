@@ -171,9 +171,13 @@ const TodoInput = ({ setTodo }) => {
   const inputRef = useRef(null);
   const addTodo = () => {
     const newTodo = {
-      id: Number(new Date()),
       content: inputRef.current.value,
     };
+    fetch("http://localhost:3000/todo"),
+      {
+        method: "POST",
+        body: JSON.stringify(newTodo),
+      };
     setTodo((prev) => [...prev, newTodo]);
   };
   return (
