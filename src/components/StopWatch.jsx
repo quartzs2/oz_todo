@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { formatTime } from "../utils/formatTime";
+import { formattedTime } from "../utils/formatTime";
+
+const INTERVAL_MS = 1000;
 
 export const StopWatch = () => {
   const [time, setTime] = useState(0);
@@ -10,25 +12,31 @@ export const StopWatch = () => {
     if (isOn === true) {
       const timerId = setInterval(() => {
         setTime((prev) => prev + 1);
-      }, 1000);
+      }, INTERVAL_MS);
+
       timerRef.current = timerId;
     } else {
       clearInterval(timerRef.current);
+      timerRef.current = null;
     }
+
+    return () => clearInterval(timerRef.current);
   }, [isOn]);
+
+  const handleToggle = () => {
+    setIsOn((prev) => !prev);
+  };
+
+  const handleReset = () => {
+    setTime(0);
+    setIsOn(false);
+  };
 
   return (
     <div>
-      {formatTime(time)}
-      <button onClick={() => setIsOn((prev) => !prev)}>{isOn ? "끄기" : "켜기"}</button>
-      <button
-        onClick={() => {
-          setTime(0);
-          setIsOn(false);
-        }}
-      >
-        리셋
-      </button>
+      {formattedTime(time)}
+      <button onClick={handleToggle}>{isOn ? "끄기" : "켜기"}</button>
+      <button onClick={handleReset}>리셋</button>
     </div>
   );
 };

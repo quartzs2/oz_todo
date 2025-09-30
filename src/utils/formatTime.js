@@ -1,6 +1,16 @@
-export const formatTime = (seconds) => {
-  const timeString = `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(
-    Math.floor((seconds % 3600) / 60)
-  ).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
-  return timeString;
+const SECONDS_PER_HOUR = 3600;
+const SECONDS_PER_MINUTE = 60;
+const TIME_PADDING = 2;
+const PADDING_CHAR = "0";
+
+export const formattedTime = (seconds) => {
+  const hours = Math.floor(seconds / SECONDS_PER_HOUR);
+  const minutes = Math.floor((seconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
+  const remainingSeconds = seconds % SECONDS_PER_MINUTE;
+
+  const formattedHours = String(hours).padStart(TIME_PADDING, PADDING_CHAR);
+  const formattedMinutes = String(minutes).padStart(TIME_PADDING, PADDING_CHAR);
+  const formattedSeconds = String(remainingSeconds).padStart(TIME_PADDING, PADDING_CHAR);
+
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
