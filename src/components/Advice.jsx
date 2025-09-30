@@ -1,12 +1,12 @@
-import { useFetch } from "../hooks/useFetch";
-import { API_URLS } from "../constants/urls";
+import useFetch from "../hooks/useFetch";
+import { getAdvice } from "../api/getAdvice";
 
 export const Advice = () => {
-  const [isLoading, data] = useFetch(API_URLS.ADVICE);
+  const { data, isLoading } = useFetch({ query: getAdvice });
 
   return (
     <>
-      {!isLoading && (
+      {!isLoading && data && (
         <>
           <div>{data.message}</div>
           <div>-{data.author}-</div>

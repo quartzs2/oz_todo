@@ -1,17 +1,35 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-export const useFetch = (url) => {
-  const [isLoading, setIsLoading] = useState(true);
+function useFetch({ query, options }) {
   const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((res) => {
-        setData(res);
+  const refetch = useCallback(() => {
+    setIsLoading(true);
+    setError(null);
+
+    query(options)
+      .then((response) => response.json())
+      .then((data) => {
+        setData(data);
+      })
+      .catch((e) => {
+        console.error(e);
+        setError({
+          message: e.message,
+        });
+      })
+      .finally(() => {
         setIsLoading(false);
       });
-  }, [url]);
+  }, [query, options]);
 
-  return [isLoading, data];
-};
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  return { data, isLoading, error, refetch };
+}
+
+export default useFetch;
